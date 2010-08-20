@@ -1,10 +1,18 @@
 <?php
 
 // Initialize random data.
-$randomNumbers = array();
-for ($a = 0; $a <= 50; ++$a)
+$encodedNumbers = filter_input(INPUT_GET, 'numbers', FILTER_SANITIZE_STRING);
+if ($encodedNumbers == '')
 {
-    $randomNumbers[] = rand(-50, 200);
+    $randomNumbers = array();
+    for ($a = 0; $a <= 10; ++$a)
+    {
+        $randomNumbers[] = rand(-50, 200);
+    }
+}
+else
+{
+    $randomNumbers = json_decode(base64_decode($encodedNumbers));
 }
 
 /** DEBUG 
@@ -21,8 +29,11 @@ $encodedNumbers = base64_encode(json_encode($randomNumbers));
     <head>
         <title>Graph Sort | PHPExperts.pro</title>
         <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+        <!--<script type="text/javascript" src="js/jquery-ui-1.8.4.custom.min.js"></script>-->
+        <script type="text/javascript" src="js/jquery.scrollTo-min.js"></script>
         <script type="text/javascript" src="js/jquery.json-2.2.min.js"></script>
-        <script type="text/javascript" src="js/jquery.base64-1.0.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.base64-1.0.0.min.js"></script>        
+        <!--<script type="text/javascript" src="js/jquery.jcarousel.min.js"></script>-->
         <script type="text/javascript">
 var numbers = jQuery.parseJSON('<?php echo json_encode($randomNumbers); ?>');
 var insert_iteration = 1;
@@ -33,8 +44,10 @@ function iterationLoaded()
 {
 //    alert('yes!');
     $('#mycarousel-next').attr("disabled", false);
+    $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * viewed_iteration, 0);
  //   g_carousel.scroll(viewed_iteration);
 //    $('#mycarousel').scroll();
+//    g_carousel.next();
 }
 
 function doInsertionIteration()
@@ -43,7 +56,7 @@ function doInsertionIteration()
     var li;
     // 1. Get the partially-sorted numbers.
 //    alert(numbers);
-    jQuery.getJSON('sorter.php?algorithm=insertion&numbers=' + $.base64Encode($.toJSON(numbers)) + '&i=' + (insert_iteration - 1), function(json)
+    jQuery.getJSON('sorter.php?algorithm=insertion&numbers=' + $.base64Encode($.toJSON(numbers)) + '&i=' + (insert_iteration), function(json)
     { 
         //$('#mycarousel').width((insert_iteration + 1) * $('#mycarousel').width());
         //alert('mycarousel: ' + $('#mycarousel').width());
@@ -52,6 +65,7 @@ function doInsertionIteration()
         //alert('insertion_sort_steps: ' + $('#insertion_sort_steps').width());//        alert(json);
         //alert($.base64Encode($.toJSON(numbers)));
         var jsonString = String(json);
+        alert("i: " + (insert_iteration) + ": " + json);
         $('#insertion_sort_steps').append('<li>' +
                                           '<div class="numbers">' + jsonString.replace(/,/g, ', ') + '</div>' + 
                                           '   <img onload="iterationLoaded()" width="700" height="230" src="graph_sort.php?numbers=' + $.base64Encode($.toJSON(json)) + '"/>' + 
@@ -60,45 +74,10 @@ function doInsertionIteration()
     });
 }
 
-function mycarousel_initCallback(carousel)
-{
-    g_carousel = carousel;
-    jQuery('.jcarousel-control a').bind('click', function() {
-        viewed_iteration = jQuery(this).text();
-        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
-        carousel.scroll(jQuery.jcarousel.intval(jQuery(this).text()));
-        return false;
-    });
- 
-    jQuery('.jcarousel-scroll select').bind('change', function() {
-        carousel.options.scroll = jQuery.jcarousel.intval(this.options[this.selectedIndex].value);
-        return false;
-    });
- 
-    jQuery('#mycarousel-next').bind('click', function() {
-        ++viewed_iteration;
-        alert(viewed_iteration + " - " + insert_iteration);
-        if (viewed_iteration > insert_iteration)
-        {
-            $('#mycarousel-next').attr("disabled", true);
-            doInsertionIteration();
-            
-        }
-        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
-
-        return false;
-    });
- 
-    jQuery('#mycarousel-prev').bind('click', function() {
-        --viewed_iteration;
-        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
-        carousel.prev();
-        return false;
-    });
-};
 
 $(document).ready(function() { 
-/*    jQuery("#mycarousel").jcarousel({
+/*
+    jQuery("#mycarousel").jcarousel({
         scroll: 1,
         initCallback: mycarousel_initCallback,
         // This tells jCarousel NOT to autobuild prev/next buttons
@@ -106,19 +85,32 @@ $(document).ready(function() {
         buttonPrevHTML: null
     });
 */
+
+    jQuery('#mycarousel-prev').bind('click', function() {
+        --viewed_iteration;
+        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
+        $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * (viewed_iteration - 1), 0);
+        return false;
+    });
+
     jQuery('#mycarousel-next').bind('click', function() {
         ++viewed_iteration;
-        alert(viewed_iteration + " - " + insert_iteration);
         if (viewed_iteration > insert_iteration)
         {
             $('#mycarousel-next').attr("disabled", true);
             doInsertionIteration();
             
         }
+        else
+        {
+            $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * viewed_iteration, 0);
+        }
         $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
 
         return false;
-    });});
+    });
+
+});
         </script>
         <style type="text/css">
 div.sortgraphs
@@ -145,7 +137,7 @@ ul.sortgraphs li
 }
 
 div.numbers { width: 720px; }
-/*
+
 .jcarousel-control {
     margin-bottom: 10px;
     text-align: center;
@@ -188,7 +180,6 @@ div.numbers { width: 720px; }
     text-decoration: underline;
     font-size: 11px;
 }
-*/
         </style>
     </head>
     <body>
@@ -196,6 +187,7 @@ div.numbers { width: 720px; }
         <h2>Visualizing sorting algorithms</h2>
         <p>This app helps you <strong>*see*</strong> how a sort algorithm works, step by step.</p>
         <h3>Insertion Sort</h3>
+        <div id="insertion_sort_iteration">Iteration: 1</div>
         <div class="sortgraphs" id="mycarousel">
 <!--            <div class="jcarousel-control"> 
                 <a href="#">1</a> 
@@ -209,7 +201,6 @@ div.numbers { width: 720px; }
                 <a href="#">9</a> 
                 <a href="#">10</a> 
             </div> -->
-            <div id="insertion_sort_iteration">Iteration: 1</div>
             <ul class="sortgraphs" id="insertion_sort_steps">
                 <li>
                     <div class="numbers"><?php echo join(', ', $randomNumbers); ?></div>
@@ -217,6 +208,9 @@ div.numbers { width: 720px; }
                 </li>
             </ul>
         </div>
-        <div><button id="mycarousel-next">Next &raquo;</button></div>
+        <div style="width: 740px">
+            <div style="float: left"><button id="mycarousel-prev">&laquo; Prev</button></div>
+            <div style="float: right"><button id="mycarousel-next">Next &raquo;</button></div>
+        </div>
     </body>
 </html>

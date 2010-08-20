@@ -6,7 +6,7 @@ function swap(&$input, $pos1, $pos2)
     $input[$pos2] = $chr;
 }
 
-function marriage_sort($input)
+function marriage_sort($input, &$steps)
 {
     $end = count($input);
 
@@ -27,6 +27,7 @@ function marriage_sort($input)
             }
 
             ++$i;
+            ++$steps;
         }
 
         // Now pull out elements >= $input[$bestPos] and move to the end.
@@ -42,6 +43,8 @@ function marriage_sort($input)
             {
                 ++$i;
             }
+            
+            ++$steps;
         }
 
         // Finally, move our best pivot element to the end.

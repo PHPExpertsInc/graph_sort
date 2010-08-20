@@ -1,6 +1,6 @@
 <?php
 
-function insertion_sort($input)
+function insertion_sort($input, &$steps)
 {
     $length = count($input);
     for ($i = 1; $i < $length; ++$i)
@@ -23,6 +23,8 @@ function insertion_sort($input)
             {
                 $done = true;
             }
+            
+            ++$steps;
         }
         while ($done === false);
 

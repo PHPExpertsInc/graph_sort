@@ -5,7 +5,7 @@ $encodedNumbers = filter_input(INPUT_GET, 'numbers', FILTER_SANITIZE_STRING);
 if ($encodedNumbers == '')
 {
     $randomNumbers = array();
-    for ($a = 0; $a <= 10; ++$a)
+    for ($a = 0; $a <= 100; ++$a)
     {
         $randomNumbers[] = rand(-50, 200);
     }
@@ -23,11 +23,12 @@ exit;
 
 $encodedNumbers = json_encode($randomNumbers);
 
-function constructSortWidget($algorithm, $label)
+function constructSortWidget($algorithm, $description)
 {
     global $randomNumbers, $encodedNumbers;
 ?>
-        <h3><?php echo $label; ?> Sort</h3>
+        <h3><?php echo ucfirst($algorithm); ?> Sort</h3>
+        <p class="description"><?php echo nl2br($description); ?></p>
         <div id="<?php echo $algorithm; ?>_sort_iteration">Iteration: 1<br/>Steps: 0</div>
         <div class="sortgraphs" id="<?php echo $algorithm; ?>_box">
             <ul class="sortgraphs" id="<?php echo $algorithm; ?>_sort_steps">
@@ -41,7 +42,7 @@ function constructSortWidget($algorithm, $label)
             <div class="prev"><button class="iteration-prev" id="<?php echo $algorithm; ?>_prev" disabled="disabled">&laquo; Prev</button></div>
             <div class="next"><button class="iteration-next" id="<?php echo $algorithm; ?>_next">Next &raquo;</button></div>
         </div>
-<?php    
+<?php
 }
 
 ?>
@@ -68,10 +69,9 @@ var length = <?php echo count($randomNumbers); ?>;
         <h2>Visualizing sorting algorithms</h2>
         <p>This app helps you <strong>*see*</strong> how a sort algorithm works, step by step.</p>
 <?php
-    echo constructSortWidget('bubble', 'Bubble');
-    echo constructSortWidget('insertion', 'Insertion');
-    echo constructSortWidget('quick', 'Quick');
-    echo constructSortWidget('marriage', 'Marriage');
+    echo constructSortWidget('bubble', 'Bubble Sort is considered one of the least efficient sorting algorithms.  All it does is compare each element, one at a time, with every other element, and if that is bigger than the comparison, it swaps them. It has a performance rating of O(n<sup>2</sup>), meaning that if you have 100 elements, it will take 10,000 (100*100) steps to sort them.');
+    echo constructSortWidget('insertion', 'Insertion Sort is a moderately efficient sorting algorithm. If the data is partially sorted, it can be quite fast. If it is totally random, it can take up to O(n<sup>2</sup>) but averages O(n<sup>1.5</sup>).  On average, it would take 1,000 - 2,800 passes to sort 100 elements.');    echo constructSortWidget('quick', 'QuickSort is one of the most efficient sorting algorithm.  It averages O(n * log n).  On average, it would take 500 - 1,000 passes to sort 100 elements.');
+    echo constructSortWidget('marriage', 'Marriage Sort is a highly efficient indeterminate sorting algorithm.  It is indeterminate because a fully sorted array is never guaranteed. Like real life, elements search, one by one, for "better" (higher valued) elements, stopping once they get a good one and no much better ones are seen over the horizon.  At its worse, it is O(n<sup>1.5</sup>) but it can achieve much better results far faster than even quicksort, independently of how random the elements are.  On average, it would take 200 - 700 passes to get a 75% sorted array.  Using an algorithm that works well with semi-sorted arrays (such as Insertion Sort) will then provide fully sorted arrays at just over the efficiency of QuickSort.  However, Marriage Sort is by far one of the best algorithms yet invented when the number and/or values of elements are dynamic (adding and subtracting).');
 ?>
         <p style="margin-top: 50px">
             <a href="http://validator.w3.org/check?uri=referer"><img

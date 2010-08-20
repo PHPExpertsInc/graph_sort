@@ -13,7 +13,7 @@ function doIteration(algorithm)
     var li;
     // 1. Get the partially-sorted numbers.
     //alert('sent: ' + numbers);
-    jQuery.getJSON('sorter.php?algorithm=insertion&numbers=' + $.toJSON(numbers) + '&i=' + (insert_iteration - 1), function(json)
+    jQuery.getJSON('sorter.php?algorithm=' + algorithm + '&numbers=' + $.toJSON(numbers) + '&i=' + (insert_iteration - 1), function(json)
     { 
         numbers = json;
         //alert('returned: ' + json);
@@ -53,7 +53,6 @@ $(document).ready(function()
         $('#' + algorithm + '_prev').attr("disabled", false);
         if (viewed_iteration > insert_iteration)
         {
-            $('#' + algorithm + '_next').attr("disabled", true);
             $('ul#' + algorithm + '_sort_steps').width((insert_iteration + 1) * $('div#' + algorithm + '_box').width());
             $('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * viewed_iteration, 0);
             doIteration(algorithm);
@@ -61,6 +60,11 @@ $(document).ready(function()
         else
         {
             $('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * (viewed_iteration - 1), 0);
+        }
+        
+        if (viewed_iteration == length)
+        {
+            $('#' + algorithm + '_next').attr("disabled", true);
         }
 
         $('#' + algorithm + '_sort_iteration').text('Iteration: ' + viewed_iteration);

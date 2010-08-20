@@ -22,6 +22,28 @@ exit;
 **/
 
 $encodedNumbers = json_encode($randomNumbers);
+
+function constructSortWidget($algorithm, $label)
+{
+    global $randomNumbers, $encodedNumbers;
+?>
+        <h3><?php echo $label; ?> Sort</h3>
+        <div id="<?php echo $algorithm; ?>_sort_iteration">Iteration: 1</div>
+        <div class="sortgraphs" id="<?php echo $algorithm; ?>_box" disabled="disabled">
+            <ul class="sortgraphs" id="<?php echo $algorithm; ?>_sort_steps">
+                <li>
+                    <div class="numbers"><?php echo join(', ', $randomNumbers); ?></div>
+                    <img alt="graph of numbers" width="700" height="230" src="graph_sort.php?numbers=<?php echo $encodedNumbers; ?>"/>
+                </li>
+            </ul>
+        </div>
+        <div class="controls">
+            <div class="prev"><button class="iteration-prev" id="<?php echo $algorithm; ?>_prev" disabled="disabled">&laquo; Prev</button></div>
+            <div class="next"><button class="iteration-next" id="<?php echo $algorithm; ?>_next">Next &raquo;</button></div>
+        </div>
+<?php    
+}
+
 ?>
 <?php
 header('Content-Type: text/html; charset=utf-8');
@@ -47,21 +69,10 @@ var viewed_iteration = 1;
         <h1>Graph Sort</h1>
         <h2>Visualizing sorting algorithms</h2>
         <p>This app helps you <strong>*see*</strong> how a sort algorithm works, step by step.</p>
-        <h3>Insertion Sort</h3>
-        <div id="insertion_sort_iteration">Iteration: 1</div>
-        <div class="sortgraphs" id="insertion_box" disabled="disabled">
-            <ul class="sortgraphs" id="insertion_sort_steps">
-                <li>
-                    <div class="numbers"><?php echo join(', ', $randomNumbers); ?></div>
-                    <img alt="graph of numbers" width="700" height="230" src="graph_sort.php?numbers=<?php echo $encodedNumbers; ?>"/>
-                </li>
-            </ul>
-        </div>
-        <div class="controls">
-            <div class="prev"><button class="iteration-prev" id="insertion_prev" disabled="disabled">&laquo; Prev</button></div>
-            <div class="next"><button class="iteration-next" id="insertion_next">Next &raquo;</button></div>
-        </div>
-        <p style="clear: both; margin-top: 50px">
+<?php
+    echo constructSortWidget('insertion', 'Insertion');
+?>
+        <p style="margin-top: 50px">
             <a href="http://validator.w3.org/check?uri=referer"><img
                 src="http://www.w3.org/Icons/valid-xhtml10"
                 alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>

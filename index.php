@@ -36,6 +36,7 @@ $encodedNumbers = json_encode($randomNumbers);
         <!--<script type="text/javascript" src="js/jquery.jcarousel.min.js"></script>-->
         <script type="text/javascript">
 var numbers = jQuery.parseJSON('<?php echo json_encode($randomNumbers); ?>');
+var length = <?php echo count($randomNumbers); ?>;
 var insert_iteration = 1;
 var viewed_iteration = 1;
 var g_carousel;
@@ -86,11 +87,17 @@ $(document).ready(function() {
         --viewed_iteration;
         $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
         $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * (viewed_iteration - 1), 0);
+        
+        if (viewed_iteration == 1)
+        {
+            $('#mycarousel-prev').attr("disabled", true);
+        }
         return false;
     });
 
     jQuery('#mycarousel-next').bind('click', function() {
         ++viewed_iteration;
+        $('#mycarousel-prev').attr("disabled", false);
         if (viewed_iteration > insert_iteration)
         {
             $('#mycarousel-next').attr("disabled", true);
@@ -99,8 +106,14 @@ $(document).ready(function() {
         }
         else
         {
-            $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * viewed_iteration, 0);
+            $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * (viewed_iteration - 1), 0);
         }
+        
+        if (viewed_iteration == length)
+        {
+            $('#mycarousel-next').attr("disabled", true);
+        }
+
         $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
 
         return false;
@@ -133,49 +146,6 @@ ul.sortgraphs li
 }
 
 div.numbers { width: 720px; }
-
-.jcarousel-control {
-    margin-bottom: 10px;
-    text-align: center;
-}
- 
-.jcarousel-control a {
-    font-size: 75%;
-    text-decoration: none;
-    padding: 0 5px;
-    margin: 0 0 5px 0;
-    border: 1px solid #fff;
-    color: #eee;
-    background-color: #4088b8;
-    font-weight: bold;
-}
- 
-.jcarousel-control a:focus,
-.jcarousel-control a:active {
-    outline: none;
-}
- 
-.jcarousel-scroll {
-    margin-top: 10px;
-    text-align: center;
-}
- 
-.jcarousel-scroll form {
-    margin: 0;
-    padding: 0;
-}
- 
-.jcarousel-scroll select {
-    font-size: 75%;
-}
- 
-#mycarousel-next,
-#mycarousel-prev {
-    cursor: pointer;
-    margin-bottom: -10px;
-    text-decoration: underline;
-    font-size: 11px;
-}
         </style>
     </head>
     <body>
@@ -205,7 +175,7 @@ div.numbers { width: 720px; }
             </ul>
         </div>
         <div style="width: 740px">
-            <div style="float: left"><button id="mycarousel-prev">&laquo; Prev</button></div>
+            <div style="float: left"><button id="mycarousel-prev" disabled="disabled">&laquo; Prev</button></div>
             <div style="float: right"><button id="mycarousel-next">Next &raquo;</button></div>
         </div>
     </body>

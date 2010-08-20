@@ -10,23 +10,44 @@ if (isset($_GET['debug']))
     echo 'Original: ' . join(', ', $numbers);
 }
 
-if ($algorithm == 'insertion')
+//  Make sure the view file does not contain any inappropriate characters.
+//  This is *vitally* important, as otherwise hackers would be able to arbitrarily
+//  view any file on the system that your PHP process has access to, which would be bad.
+if (preg_match('/[^\w\d._-]/', $algorithm) !== 0)
 {
-    require 'sorts/insertion_sort.algorithm.php';
+    trigger_error('Invalid algorithm name.', E_USER_ERROR);
+}
+
+$filename = "sorts/{$algorithm}_sort.algorithm.php";
+if (file_exists($filename))
+{
+    require $filename;
     
-    $partially_sorted = iterative_insertion_sort($numbers, $iteration);
+    $sorter = "{$algorithm}_sort";
+    $iterative_sorter = "iterative_{$algorithm}_sort";
+    $partially_sorted = $iterative_sorter($numbers, $iteration);
     //$numbers = insertion_sort($numbers, $iteration);
-    
+
     if (isset($_GET['debug']))
     {
+        $steps = $total_steps = 0;
 //        echo 'asdf';
-        print '<pre>All-at-once: ' . join(', ', insertion_sort($numbers)) . "\n";
-        print 'Step 0: ' . join(', ', $numbers) . "\n";
+        $sorted = $sorter($numbers, $steps);
+        print '<div>All-at-once: (' . $steps . ') ' . join(', ', $sorted) . "</div>\n";
+        print '<div>Step 0: ' . join(', ', $numbers) . "</div>\n";
         $i = 1;
-        while ($i < count($numbers))
+        while ($numbers !== $sorted && $i <= 1000)
         {
-            $numbers = iterative_insertion_sort($numbers, $i);
-            print 'Step ' . $i . ': ' . join(', ', $numbers) . "\n";
+            $numbers = $results = $iterative_sorter($numbers, $i);
+            $steps = '?';
+            if (isset($results['data']))
+            {
+                $numbers = $results['data'];
+                $steps = $results['steps'];
+                $total_steps += $steps;
+            }
+
+            print '<div>Iteration ' . $i . ': Steps: ' . $steps . ' (' . $total_steps . ') ['  . join(', ', $numbers) . "]</div>\n";
             
             ++$i;
         }

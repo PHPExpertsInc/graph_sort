@@ -28,8 +28,8 @@ function constructSortWidget($algorithm, $label)
     global $randomNumbers, $encodedNumbers;
 ?>
         <h3><?php echo $label; ?> Sort</h3>
-        <div id="<?php echo $algorithm; ?>_sort_iteration">Iteration: 1</div>
-        <div class="sortgraphs" id="<?php echo $algorithm; ?>_box" disabled="disabled">
+        <div id="<?php echo $algorithm; ?>_sort_iteration">Iteration: 1<br/>Steps: 0</div>
+        <div class="sortgraphs" id="<?php echo $algorithm; ?>_box">
             <ul class="sortgraphs" id="<?php echo $algorithm; ?>_sort_steps">
                 <li>
                     <div class="numbers"><?php echo join(', ', $randomNumbers); ?></div>
@@ -60,8 +60,6 @@ header('Content-Type: text/html; charset=utf-8');
         <script type="text/javascript">
 var numbers = jQuery.parseJSON('<?php echo json_encode($randomNumbers); ?>');
 var length = <?php echo count($randomNumbers); ?>;
-var insert_iteration = 1;
-var viewed_iteration = 1;
         </script>
         <link rel="stylesheet" type="text/css" href="css/main.css"/>
     </head>
@@ -70,7 +68,10 @@ var viewed_iteration = 1;
         <h2>Visualizing sorting algorithms</h2>
         <p>This app helps you <strong>*see*</strong> how a sort algorithm works, step by step.</p>
 <?php
+    echo constructSortWidget('bubble', 'Bubble');
     echo constructSortWidget('insertion', 'Insertion');
+    echo constructSortWidget('quick', 'Quick');
+    echo constructSortWidget('marriage', 'Marriage');
 ?>
         <p style="margin-top: 50px">
             <a href="http://validator.w3.org/check?uri=referer"><img

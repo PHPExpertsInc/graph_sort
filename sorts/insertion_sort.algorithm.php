@@ -34,6 +34,7 @@ function insertion_sort($input)
 
 function iterative_insertion_sort($input, $i)
 {
+    $steps = 0;
     $length = count($input);
     if ($i < $length)
     {
@@ -55,11 +56,13 @@ function iterative_insertion_sort($input, $i)
             {
                 $done = true;
             }
+
+            ++$steps;
         }
         while ($done === false);
 
         $input[$j + 1] = $value;
     }
 
-    return $input;
+    return array('steps' => $steps, 'data' => $input);
 }

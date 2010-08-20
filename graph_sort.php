@@ -15,10 +15,7 @@ $randomNumbers = json_decode($encodedNumbers);
 $DataSet = new pData;
 $DataSet->AddPoint($randomNumbers,"Serie1");
 $DataSet->AddAllSeries();
-$DataSet->SetAbsciseLabelSerie();
-$DataSet->SetSerieName("January","Serie1");
-$DataSet->SetSerieName("February","Serie2");
-$DataSet->SetSerieName("March","Serie3");
+
 
 // Initialise the graph
 $Test = new pChart(700,230);
@@ -38,6 +35,6 @@ $Test->drawBarGraph($DataSet->GetData(),$DataSet->GetDataDescription(),TRUE,80);
 header('Content-Type: image/png');
 
 // Finish the graph
-$Test->drawLegend(596,150,$DataSet->GetDataDescription(),255,255,255);
+//$Test->drawLegend(596,150,$DataSet->GetDataDescription(),255,255,255);
 $Test->drawTitle(50,22,"Example 12",50,50,50,585);
 $Test->Render();

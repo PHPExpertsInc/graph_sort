@@ -22,3 +22,7 @@ ul.sortgraphs li
 }
 
 div.numbers { width: 720px; }
+
+div.controls { width: 740px; }
+div.controls div.prev { float: left; }
+div.controls div.next { float: right; }

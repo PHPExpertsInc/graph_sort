@@ -57,9 +57,9 @@ var viewed_iteration = 1;
                 </li>
             </ul>
         </div>
-        <div style="width: 740px">
-            <div style="float: left"><button class="iteration-prev" disabled="disabled">&laquo; Prev</button></div>
-            <div style="float: right"><button class="iteration-next">Next &raquo;</button></div>
+        <div class="controls">
+            <div class="prev"><button class="iteration-prev" disabled="disabled">&laquo; Prev</button></div>
+            <div class="next"><button class="iteration-next">Next &raquo;</button></div>
         </div>
     </body>
 </html>

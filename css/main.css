@@ -1,0 +1,24 @@
+div.sortgraphs
+{
+    width: 742px;
+    overflow: auto;
+}
+ul.sortgraphs
+{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    width: 750px;
+}
+
+ul.sortgraphs li
+{
+    padding: 0;
+    margin: 0;
+    text-indent: 0;
+    border: 1px solid black; padding: 10px;
+    width: 720px;
+    float: left;
+}
+
+div.numbers { width: 720px; }

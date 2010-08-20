@@ -49,7 +49,7 @@ var viewed_iteration = 1;
         <p>This app helps you <strong>*see*</strong> how a sort algorithm works, step by step.</p>
         <h3>Insertion Sort</h3>
         <div id="insertion_sort_iteration">Iteration: 1</div>
-        <div class="sortgraphs" id="mycarousel">
+        <div class="sortgraphs" id="insertion_box" disabled="disabled">
             <ul class="sortgraphs" id="insertion_sort_steps">
                 <li>
                     <div class="numbers"><?php echo join(', ', $randomNumbers); ?></div>
@@ -58,8 +58,13 @@ var viewed_iteration = 1;
             </ul>
         </div>
         <div class="controls">
-            <div class="prev"><button class="iteration-prev" disabled="disabled">&laquo; Prev</button></div>
-            <div class="next"><button class="iteration-next">Next &raquo;</button></div>
+            <div class="prev"><button class="iteration-prev" id="insertion_prev" disabled="disabled">&laquo; Prev</button></div>
+            <div class="next"><button class="iteration-next" id="insertion_next">Next &raquo;</button></div>
         </div>
+        <p style="clear: both; margin-top: 50px">
+            <a href="http://validator.w3.org/check?uri=referer"><img
+                src="http://www.w3.org/Icons/valid-xhtml10"
+                alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a>
+        </p>  
     </body>
 </html>

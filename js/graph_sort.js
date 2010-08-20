@@ -1,10 +1,13 @@
-function iterationLoaded()
+function iterationLoaded(algorithm)
 {
-    $('#mycarousel-next').attr("disabled", false);
-    $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * viewed_iteration, 0);
+    if (viewed_iteration < length)
+    {
+        $('#' + algorithm + '_next').attr("disabled", false);
+    }
+    //$('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * viewed_iteration, 0);
 }
 
-function doInsertionIteration()
+function doIteration(algorithm)
 {
     ++insert_iteration;
     var li;
@@ -14,50 +17,53 @@ function doInsertionIteration()
     { 
         numbers = json;
         //alert('returned: ' + json);
-        $('ul.sortgraphs').width(insert_iteration * $('div.sortgraphs').width());
         var jsonString = String(json);
-        $('#insertion_sort_steps').append('<li>' +
+        $('ul#' + algorithm + '_sort_steps').append('<li>' +
                                           '<div class="numbers">' + jsonString.replace(/,/g, ', ') + '</div>' + 
-                                          '   <img onload="iterationLoaded()" width="700" height="230" src="graph_sort.php?numbers=' + $.toJSON(json) + '"/>' + 
+                                          '   <img onload="iterationLoaded(\'' + algorithm + '\')" width="700" height="230" src="graph_sort.php?numbers=' + $.toJSON(json) + '"/>' + 
                                           '</li>');
     
     });
 }
 
-$(document).ready(function() { 
-    jQuery('.iteration-prev').bind('click', function() {
+$(document).ready(function()
+{ 
+    jQuery('.iteration-prev').bind('click', function()
+    {
+        var algorithm = $(this).attr('id').substr(0, $(this).attr('id').indexOf('_'));
+
         --viewed_iteration;
-        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
-        $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * (viewed_iteration - 1), 0);
-        
+        $('#' + algorithm + '_sort_iteration').text('Iteration: ' + viewed_iteration);
+        $('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * (viewed_iteration - 1), 0);
+
+        $('#' + algorithm + '_next').attr("disabled", false);
         if (viewed_iteration == 1)
         {
-            $('#mycarousel-prev').attr("disabled", true);
+            $('#' + algorithm + '_prev').attr("disabled", true);
         }
         return false;
     });
 
-    jQuery('.iteration-next').bind('click', function() {
-        //alert($(this).attr('algorithm'));
+    jQuery('.iteration-next').bind('click', function()
+    {
+        var algorithm = $(this).attr('id').substr(0, $(this).attr('id').indexOf('_'));
+        //alert(algorithm);
+
         ++viewed_iteration;
-        $('#mycarousel-prev').attr("disabled", false);
+        $('#' + algorithm + '_prev').attr("disabled", false);
         if (viewed_iteration > insert_iteration)
         {
-            $('#mycarousel-next').attr("disabled", true);
-            doInsertionIteration();
-            
+            $('#' + algorithm + '_next').attr("disabled", true);
+            $('ul#' + algorithm + '_sort_steps').width((insert_iteration + 1) * $('div#' + algorithm + '_box').width());
+            $('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * viewed_iteration, 0);
+            doIteration(algorithm);
         }
         else
         {
-            $('div.sortgraphs').scrollTo($('div.sortgraphs').width() * (viewed_iteration - 1), 0);
-        }
-        
-        if (viewed_iteration == length)
-        {
-            $('#mycarousel-next').attr("disabled", true);
+            $('div#' + algorithm + '_box').scrollTo($('div#' + algorithm + '_box').width() * (viewed_iteration - 1), 0);
         }
 
-        $('#insertion_sort_iteration').text('Iteration: ' + viewed_iteration);
+        $('#' + algorithm + '_sort_iteration').text('Iteration: ' + viewed_iteration);
 
         return false;
     });

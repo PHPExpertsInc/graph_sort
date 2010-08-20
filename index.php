@@ -12,7 +12,7 @@ if ($encodedNumbers == '')
 }
 else
 {
-    $randomNumbers = json_decode(base64_decode($encodedNumbers));
+    $randomNumbers = json_decode($encodedNumbers);
 }
 
 /** DEBUG 
@@ -21,7 +21,7 @@ print_r($randomNumbers);
 exit;
 **/
 
-$encodedNumbers = base64_encode(json_encode($randomNumbers));
+$encodedNumbers = json_encode($randomNumbers);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
@@ -55,20 +55,16 @@ function doInsertionIteration()
     ++insert_iteration;
     var li;
     // 1. Get the partially-sorted numbers.
-//    alert(numbers);
-    jQuery.getJSON('sorter.php?algorithm=insertion&numbers=' + $.base64Encode($.toJSON(numbers)) + '&i=' + (insert_iteration), function(json)
+    //alert('sent: ' + numbers);
+    jQuery.getJSON('sorter.php?algorithm=insertion&numbers=' + $.toJSON(numbers) + '&i=' + (insert_iteration - 1), function(json)
     { 
-        //$('#mycarousel').width((insert_iteration + 1) * $('#mycarousel').width());
-        //alert('mycarousel: ' + $('#mycarousel').width());
-//        $('#insertion_sort_steps').width(insert_iteration * $('#insertion_sort_steps').width());
+        numbers = json;
+        //alert('returned: ' + json);
         $('ul.sortgraphs').width(insert_iteration * $('div.sortgraphs').width());
-        //alert('insertion_sort_steps: ' + $('#insertion_sort_steps').width());//        alert(json);
-        //alert($.base64Encode($.toJSON(numbers)));
         var jsonString = String(json);
-        alert("i: " + (insert_iteration) + ": " + json);
         $('#insertion_sort_steps').append('<li>' +
                                           '<div class="numbers">' + jsonString.replace(/,/g, ', ') + '</div>' + 
-                                          '   <img onload="iterationLoaded()" width="700" height="230" src="graph_sort.php?numbers=' + $.base64Encode($.toJSON(json)) + '"/>' + 
+                                          '   <img onload="iterationLoaded()" width="700" height="230" src="graph_sort.php?numbers=' + $.toJSON(json) + '"/>' + 
                                           '</li>');
     
     });

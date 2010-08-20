@@ -9,7 +9,7 @@ include("lib/pChart/pChart.class");
 ini_set('display_errors', false);
 
 $encodedNumbers = filter_input(INPUT_GET, 'numbers', FILTER_SANITIZE_STRING);
-$randomNumbers = json_decode(base64_decode($encodedNumbers));
+$randomNumbers = json_decode($encodedNumbers);
 
 // Dataset definition 
 $DataSet = new pData;

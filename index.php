@@ -27,7 +27,7 @@ if ($length == '')
 if ($encodedNumbers == '')
 {
     $randomNumbers = array();
-    for ($a = 0; $a <= $length; ++$a)
+    for ($a = 0; $a < $length; ++$a)
     {
         $randomNumbers[] = rand(-50, 200);
     }

@@ -61,10 +61,10 @@ $(document).ready(function()
         
         if (insert_iteration == null)
         {
-            unsorted = new Array();
-            insert_iteration = new Array();
-            view_iteration = new Array();
-            total_steps = new Array();
+            unsorted = [];
+            insert_iteration = [];
+            view_iteration = [];
+            total_steps = [];
         }
         
         if (!(algorithm in insert_iteration))
@@ -72,7 +72,7 @@ $(document).ready(function()
             unsorted[algorithm] = numbers;
             insert_iteration[algorithm] = 1;
             view_iteration[algorithm] = 1;
-            total_steps[algorithm] = new Array();
+            total_steps[algorithm] = [];
             total_steps[algorithm][1] = 0;
         }
 
